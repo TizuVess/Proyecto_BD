@@ -20,6 +20,6 @@ ON EMSD_VENTA
 FOR EACH ROW
 BEGIN
     IF (COD_REPUESTO IS NULL) THEN
-        RAISE APPLICATION ERROR
+        RAISE APPLICATION ERROR(-20005, 'No se agregó ningún producto como para poder efectuar la venta');
 END;
     
