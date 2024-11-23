@@ -3,6 +3,11 @@ Aqui iran todos los archivos del proecto searados en base a la tarea o foco que 
 
 El codigo de la app que usa node.js considera o mejor ocupa el puerto 3000 para comunicar la paguina con el backend
 La base de datos se levenata mediante el puerto 1521 (editable dentro de la definicion de la misma base de datos en si)
+
+
+Para el codigo de la funcionalidad de trabajadores hay que instalar un nuevo modulo que se llama axios, este es el comando:
+npm install axios
+
 Configuraciones de mi base de datos:
 {
             "authenticationType": 2,
