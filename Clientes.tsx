@@ -7,48 +7,50 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import Logo from "../src/assets/logo-negro.png";
 
-function Trabajadores() {
-  const [trabajadores, setTrabajadores] = useState<any[]>([]);
+function Clientes() {
+  const [clientes, setClientes] = useState<any[]>([]);
   const navigate = useNavigate();
 
+  // Función para obtener la lista de clientes desde el backend
   useEffect(() => {
-    const fetchTrabajadores = async () => {
+    const fetchClientes = async () => {
       try {
-        const response = await fetch('http://localhost:3000/ver-trabajadores', {
+        const response = await fetch('http://localhost:3000/ver-clientes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({}),
         });
 
         if (!response.ok) {
-          throw new Error('Error al obtener los trabajadores');
+          throw new Error('Error al obtener los clientes');
         }
 
         const data = await response.json();
-        setTrabajadores(data);
+        setClientes(data);
       } catch (err) {
         console.error('Error:', err);
-        alert('Ocurrió un error al cargar los trabajadores');
+        alert('Ocurrió un error al cargar los clientes');
       }
     };
 
-    fetchTrabajadores();
+    fetchClientes();
   }, []);
 
   // Función para manejar la edición de un cliente
   const handleEdit = (userid: number) => {
-    navigate(`/editar-trabajador/${userid}`);
+    navigate(`/editar-cliente/${userid}`);
   };
 
   // Función para manejar la eliminación de un cliente
   const handleDelete = (userid: number) => {
-    navigate(`/eliminar-trabajador/${userid}`);
+    navigate(`/eliminar-cliente/${userid}`);
   };
 
   const handlePassword = (userid: number) => {
-    navigate(`/contrasena-trabajador/${userid}`);
+    navigate(`/contrasena-cliente/${userid}`);
   };
 
+  // Función para generar el PDF al hacer clic en "Exportar Clientes"
   const generarPDF = async () => {
     try {
       // Crear un nuevo documento PDF
@@ -67,22 +69,18 @@ function Trabajadores() {
 
         // Configurar el título del reporte con la fecha
         doc.setFontSize(16);
-        doc.text(`Reporte de Trabajadores`, 105, 20, { align: "center" });
+        doc.text(`Reporte de Clientes`, 105, 20, { align: "center" });
         doc.setFontSize(12);
         doc.text(`Fecha: ${fechaActual}`, 190, 10, { align: "right" });
 
         // Preparar los datos para la tabla
-        const headers = [["RUT", "Nombre", "Teléfono", "Email","Rol","Sueldo"]];
-        const data = trabajadores.map((trabajador: any) => [
-          trabajador.id,
-          trabajador.nombre+' '+trabajador.apellido1+' '+trabajador.apellido2,
-          trabajador.telefono,
-          trabajador.email,
-          trabajador.rol,
-          trabajador.sueldo,
+        const headers = [["RUT", "Nombre", "Teléfono", "Email"]];
+        const data = clientes.map((cliente: any) => [
+          cliente.id,
+          cliente.nombre+' '+cliente.apellido1+' '+cliente.apellido2,
+          cliente.telefono,
+          cliente.email,
         ]);
-
- 
 
         // Generar la tabla con jspdf-autotable
         (doc as any).autoTable({
@@ -102,32 +100,27 @@ function Trabajadores() {
     }
   };
 
-
-
-
-  const meId = localStorage.getItem('userId')
-
   return (
     <>
       <HelmetProvider>
         <Helmet>
-          <title>Trabajadores - Silcar</title>
+          <title>Clientes - Silcar</title>
         </Helmet>
       </HelmetProvider>
 
-      <body>
-      <div className="text-container" style={{width:"70%"}}>
+      <div className="text-container" style={{ width: "70%" }}>
         <div className="section-header">
-          <h2>Lista de Trabajadores</h2>
-          <Link to="/registrar-trabajador">Agregar Trabajador</Link>
+          <h2>Lista de Clientes</h2>
+          <Link to="/registrar-cliente">Agregar Cliente</Link>
+          {/* Enlace para exportar clientes a PDF */}
           <a href="#" onClick={(e) => { e.preventDefault(); generarPDF(); }}>
-            Exportar Trabajadores
+            Exportar Clientes
           </a>
         </div>
 
         <div className="section">
-          {trabajadores.length === 0 ? (
-            <p>No hay trabajadores registrados.</p>
+          {clientes.length === 0 ? (
+            <p>No hay clientes registrados.</p>
           ) : (
             <table>
               <thead>
@@ -137,35 +130,27 @@ function Trabajadores() {
                   <th>Apellido Materno</th>
                   <th>Email</th>
                   <th>Teléfono</th>
-                  <th>Rol</th>
-                  <th>Sueldo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {trabajadores.map((trabajador) => (
-                  <tr key={trabajador.id}>
-                    <td>{trabajador.nombre}</td>
-                    <td>{trabajador.apellido1}</td>
-                    <td>{trabajador.apellido2}</td>
-                    <td>{trabajador.email}</td>
-                    <td>{trabajador.telefono}</td>
-                    <td>{trabajador.rol}</td>
-                    <td>{trabajador.sueldo}</td>
-                    <td>     
-                      {meId != trabajador.id && (
-                      <>
+                {clientes.map((cliente) => (
+                  <tr key={cliente.id}>
+                    <td>{cliente.nombre}</td>
+                    <td>{cliente.apellido1}</td>
+                    <td>{cliente.apellido2}</td>
+                    <td>{cliente.email}</td>
+                    <td>{cliente.telefono}</td>
+                    <td>
                       <div className="icon" style={{ color: "#000000" }}>
-                        <FaEdit onClick={() => handleEdit(trabajador.id)} />
+                        <FaEdit onClick={() => handleEdit(cliente.id)} />
                       </div>
                       <div className="icon" style={{ color: "#000000" }}>
-                        <MdDeleteForever onClick={() => handleDelete(trabajador.id)} />
+                        <MdDeleteForever onClick={() => handleDelete(cliente.id)} />
                       </div>
                       <div className="icon" style={{ color: "#000000" }}>
-                        <MdPassword onClick={() => handlePassword(trabajador.id)} />
+                        <MdPassword onClick={() => handlePassword(cliente.id)} />
                       </div>
-                      </>
-                      )}
                     </td>
                   </tr>
                 ))}
@@ -174,9 +159,8 @@ function Trabajadores() {
           )}
         </div>
       </div>
-      </body>
     </>
   );
 }
 
-export default Trabajadores;
+export default Clientes;
