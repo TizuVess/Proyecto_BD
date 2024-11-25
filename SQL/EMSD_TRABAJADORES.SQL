@@ -44,7 +44,7 @@ BEGIN
     IF (CONT_NICK = 0) THEN
         CORREO := NICK || '@SILCAR.CL';
     ELSE
-        CORREO := NICK || TO_CHAR(CONT_NICK) || '@TESTSQL.CL';
+        CORREO := NICK || TO_CHAR(CONT_NICK) || '@SILCAR.CL';
     END IF;
 
     RETURN CORREO;
