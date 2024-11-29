@@ -45,7 +45,7 @@ BEGIN
     COMMIT;
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
-            RAISE_APPLICATION_ERROR(+100, 'No tenemos registrado este vehículo');
+            RAISE_APPLICATION_ERROR(+100, 'No tenemos registrado este servicio');
         WHEN STORAGE_ERROR THEN
             RAISE_APPLICATION_ERROR(-6500, 'Fallo de memoria');
     ROLLBACK;
